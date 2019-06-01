@@ -17,6 +17,7 @@ app.post('/', (request, response) => {
   const req = request;
   const res = response;
 
+  console.dir("Body")
   console.dir(req.body);
   const params = req.body;
 
@@ -31,7 +32,10 @@ app.post('/', (request, response) => {
       res.status(200).send();
       // If not blacklisted and not responding to a bot, send @channel
       if ((!blacklist.includes(channel)) && !(botMessage))
-        bot.chat.postMessage({ token: botToken, channel, text: `<!channel> | <@${user}>: ${message}` });
+        bot.chat.postMessage({ 
+          token: botToken, 
+          channel, 
+          text: `<!channel> | <@${user}>: ${message}` });
       break;
     case 'message':
     default:
