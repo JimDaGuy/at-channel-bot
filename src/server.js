@@ -23,14 +23,15 @@ app.get('/', (request, response) => {
   console.dir("Query");
   console.dir(req.query);
 
-  
+  res.send(req.body.challenge);
 });
 
-app.post('/', (request, response) => {
+app.post('*', (request, response) => {
   const req = request;
   const res = response;
 
-  console.dir("Body")
+  console.dir("Body");
+  console.log("Body2");
   console.dir(req.body);
   const params = req.body;
 
