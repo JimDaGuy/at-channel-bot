@@ -13,19 +13,6 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true, }));
 app.use(bodyParser.json());
 
-app.get('/', (request, response) => {
-  const req = request;
-  const res = response;
-
-  console.dir("Body");
-  console.dir(req.body);
-
-  console.dir("Query");
-  console.dir(req.query);
-
-  res.send(req.body.challenge);
-});
-
 app.post('*', (request, response) => {
   const req = request;
   const res = response;
@@ -33,6 +20,8 @@ app.post('*', (request, response) => {
   console.dir("Body");
   console.log("Body2");
   console.dir(req.body);
+  res.send(req.body.challenge);
+  return;
   const params = req.body;
 
   const eventType = params.event.type;
