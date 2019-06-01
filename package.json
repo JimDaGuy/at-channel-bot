@@ -1,7 +1,7 @@
 {
-  "name": "emojispell",
+  "name": "at-channel-bot",
   "version": "1.0.0",
-  "description": "Emoji Speller API for CSH Slack",
+  "description": "At Channel Bot API for CSH Slack",
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
