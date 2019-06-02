@@ -60,10 +60,12 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
     const channelDisabled = disabledChannels.get(channel);
     console.dir(disabledChannels);
     console.dir(channelDisabled);
-    if (channelDisabled) {
-      console.dir("4");
-      callback(false);
-      return;
+    if (channelDisabled !== undefined) {
+      if (channelDisabled === true) {
+        console.dir("4");
+        callback(false);
+        return;
+      }
     }
 
     // Current channel isn't blacklisted for the user
