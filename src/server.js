@@ -144,7 +144,7 @@ app.post('*', (request, response) => {
 
               // Don't send empty message
               if (message === "") {
-                break;
+                return;
               }
 
               // Respond to thread or create new thread
