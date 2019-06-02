@@ -65,6 +65,7 @@ app.post('*', (request, response) => {
                      `,
               user: user,
             });
+            return;
           } else if (message.includes("disable server")) {
             Blacklist.disableServer(user, (err) => {
               if (err) {
