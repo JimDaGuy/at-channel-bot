@@ -128,20 +128,20 @@ app.post('*', (request, response) => {
             }).then(channelInfo => {
               const channelMembers = channelInfo.channel.members;
               console.dir(channelMembers);
-              
+
               // Create message filled with users
               let message = "";
-              let j = 0;
-              for (let i = 0; i < channelMembers.length; i++) {
-                if (channelMembers[i] === 'UE7JDB49G') {
-                  j++;
 
+              for (let i, j = 0; i < channelMembers.length; i++) {
+                if (channelMembers[i] === 'UE7JDB49G') {
                   // Respond to thread or create new thread
                   if (threaded) {
                   sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
                   } else {
                   sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
                   }
+                  j++;
+
                   continue;
                 }
 
@@ -151,14 +151,14 @@ app.post('*', (request, response) => {
                     message = `${message} <@${channelMembers[i]}>`;
                   }
                   
-                  j++;
-                  
                   // Respond to thread or create new thread
                   if (threaded) {
                     sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
                   } else {
                     sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
                   }
+                  j++;
+
                 });
               }
 
