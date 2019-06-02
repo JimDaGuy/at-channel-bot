@@ -133,12 +133,17 @@ app.post('*', (request, response) => {
               let j = 0;
               for (let i = 0; i < channelMembers.length; i++) {
                 if (channelMembers[i] === 'UE7JDB49G') {
+                  console.dir('J before: ' + j);
                   j++;
+                  console.dir('J after: ' + j);
+
                   // Respond to thread or create new thread
                   if (threaded) {
-                    sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
+                  console.dir('J when called: ' + j);
+                  sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
                   } else {
-                    sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
+                  console.dir('J when called: ' + j);
+                  sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
                   }
                   continue;
                 }
@@ -149,11 +154,16 @@ app.post('*', (request, response) => {
                     message = `${message} <@${channelMembers[i]}>`;
                   }
                   
+                  console.dir('J before: ' + j);
                   j++;
+                  console.dir('J after: ' + j);
+                  
                   // Respond to thread or create new thread
                   if (threaded) {
+                    console.dir('J when called: ' + j);
                     sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
                   } else {
+                    console.dir('J when called: ' + j);
                     sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
                   }
                 });
