@@ -132,7 +132,7 @@ app.post('*', (request, response) => {
               // Create message filled with users
               let message = "";
 
-              for (let i, j = 0; i < channelMembers.length; i++) {
+              for (let i = 0, j = 0; i < channelMembers.length; i++) {
                 if (channelMembers[i] === 'UE7JDB49G') {
                   // Respond to thread or create new thread
                   if (threaded) {
