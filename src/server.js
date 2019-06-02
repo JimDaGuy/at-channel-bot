@@ -144,13 +144,22 @@ app.post('*', (request, response) => {
                       message = `${message} <@${channelMembers[i]}>`;
                     }
                     resolve();
+                    console.dir("Resolved one promise :3")
                   });
                 });
 
                 promises.push(currPromise);
+                    console.dir("All promises:")
+                console.dir(promises);
               }
 
               Promise.all(promises).then( () => {
+                    console.dir("All promises resolved")
+                    console.dir(botToken);
+                    console.dir(channel);
+                    console.dir(message);
+                    console.dir(threadTimestamp);
+                    console.dir(messageTimestamp);
                 // Respond to thread or create new thread
                 if (threaded) {
                   sendMessage(botToken, channel, message, threadTimestamp);
@@ -170,10 +179,7 @@ app.post('*', (request, response) => {
   }
 });
 
-const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations, spot) => {
-  console.dir("spot:" + spot);
-  console.dir("curr: " + currentIteration);
-  console.dir("total: " + totalIterations);
+const sendMessage = (token, channel, text, timestamp) => {
   if (currentIteration >= totalIterations) {
     // Don't send empty message
     if (text === "") {
