@@ -31,20 +31,25 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel) => {
 
     // User hasn't added any blacklists
     if (!user) {
+      console.dir("1");
       return true;
     }
 
     // User muted the server
-    if (user.serverDisabled)
+    if (user.serverDisabled) {
+      console.dir("2");
       return false;
+    }
 
     // Check disabled channels map for current channel
     const { disabledChannels } = user;
     if (disabledChannels[channel]) {
+      console.dir("3");
       return false;
     }
 
     // Current channel isn't blacklisted for the user
+    console.dir("4");
     return true;
   });
 };
