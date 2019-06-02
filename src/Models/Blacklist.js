@@ -36,7 +36,7 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
       return;
     }
 
-    if (Object.hasOwnProperty('serverDisabled')) {
+    if (user.hasOwnProperty('serverDisabled')) {
       // User muted the server
       if (user.serverDisabled) {
         callback(false);
