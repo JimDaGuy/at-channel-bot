@@ -17,9 +17,6 @@ app.post('*', (request, response) => {
   const req = request;
   const res = response;
 
-  console.dir("Body");
-  console.log("Body2");
-  console.dir(req.body);
   const params = req.body;
 
   const eventType = params.event.type;
@@ -42,13 +39,16 @@ app.post('*', (request, response) => {
           channel
         }).then(channelInfo => {
           const channelMembers = channelInfo.channel.members;
-          console.dir(channelMembers);
 
+          // Create message filled with users
           let message = "";
           for (let i = 0; i < channelMembers.length; i++) {
+            if (channelMembers[i] === 'UE7JDB49G')
+              continue;
             message = `${message} <@${channelMembers[i]}>`;
           }
 
+          // Respond to thread or create new thread
           if (threaded) {
             bot.chat.postMessage({
               token: botToken,
