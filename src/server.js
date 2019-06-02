@@ -142,6 +142,11 @@ app.post('*', (request, response) => {
                 }
               }
 
+              // Don't send empty message
+              if (message === "") {
+                break;
+              }
+
               // Respond to thread or create new thread
               if (threaded) {
                 bot.chat.postMessage({
