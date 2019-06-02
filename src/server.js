@@ -134,23 +134,11 @@ app.post('*', (request, response) => {
               for (let i = 0; i < channelMembers.length; i++) {
                 if (channelMembers[i] === 'UE7JDB49G') {
                   j++;
-                  if (j >= channelMembers.length) {
-                    // Don't send empty message
-                    if (message === "") {
-                      return;
-                    }
-
-                    // Respond to thread or create new thread
-                    if (threaded) {
-                      
-                    } else {
-                      bot.chat.postMessage({
-                        token: botToken,
-                        channel,
-                        text: message,
-                        thread_ts: messageTimestamp 
-                      });
-                    }
+                  // Respond to thread or create new thread
+                  if (threaded) {
+                    sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
+                  } else {
+                    sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
                   }
                   continue;
                 }
