@@ -148,6 +148,7 @@ app.post('*', (request, response) => {
                         text: message,
                         thread_ts: threadTimestamp
                       });
+                      return;
                     } else {
                       bot.chat.postMessage({
                         token: botToken,
@@ -155,6 +156,7 @@ app.post('*', (request, response) => {
                         text: message,
                         thread_ts: messageTimestamp 
                       });
+                      return;
                     }
                   }
                   continue;
@@ -165,6 +167,7 @@ app.post('*', (request, response) => {
                   if (enabled) {
                     message = `${message} <@${channelMembers[i]}>`;
                   }
+
                   j++;
                   if (j >= channelMembers.length) {
                     // Don't send empty message
@@ -180,6 +183,7 @@ app.post('*', (request, response) => {
                         text: message,
                         thread_ts: threadTimestamp
                       });
+                      return;
                     } else {
                       bot.chat.postMessage({
                         token: botToken,
@@ -187,6 +191,7 @@ app.post('*', (request, response) => {
                         text: message,
                         thread_ts: messageTimestamp 
                       });
+                      return;
                     }
                   }
                 });
