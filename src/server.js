@@ -7,6 +7,22 @@ const Slack = require('slack');
 const botToken = `${process.env.BOT_USER_OAUTH_TOKEN}` || '';
 const bot = new Slack({token: botToken});
 
+const mongoose = require('mongoose');
+const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/atChannelBot';
+
+mongoose.connect(dbURL, (err) => {
+  if (err) {
+    console.dir("Could not connect to database");
+    throw err;
+  }
+});
+
+const models = require('./index.js');
+const Blacklist = models.Blacklist.BlacklistModel;
+
+Blacklist.disableServer('Hiya', () => {});
+Blacklist.disableChannel('Hiya', 'Channel 2', () => {});
+
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const app = express();
@@ -32,41 +48,117 @@ app.post('*', (request, response) => {
     case 'app_mention':
       res.status(200).send();
       // If not blacklisted and not sent from a bot
-      if ((!blacklist.includes(channel)) && !(botMessage)) {
-        // Get the list of members currently in the channel
-        bot.channels.info({
-          token: botToken,
-          channel
-        }).then(channelInfo => {
-          const channelMembers = channelInfo.channel.members;
-
-          // Create message filled with users
-          let message = "";
-          for (let i = 0; i < channelMembers.length; i++) {
-            if (channelMembers[i] === 'UE7JDB49G')
-              continue;
-            message = `${message} <@${channelMembers[i]}>`;
-          }
-
-          // Respond to thread or create new thread
-          if (threaded) {
-            bot.chat.postMessage({
+      if (!botMessage) {
+          // Check if the message is requesting something other than an at channel
+          if (message.includes("help")) {
+            bot.chat.postEphemeral({
               token: botToken,
               channel,
-              text: message,
-              thread_ts: threadTimestamp
+              text: `Here\s my commands! \n
+                     =================== \n
+                     Help: \`@Notify help\` \n
+                     Enable Server: \`@Notify enable server\` \n
+                     Disable Server: \`@Notify disable server\` \n
+                     Enable Channel: \`@Notify enable channel\` \n
+                     Disable Channel: \`@Notify disable channel\` \n
+                     `,
+              user: user,
             });
-          } else {
-            bot.chat.postMessage({
-              token: botToken,
-              channel,
-              text: message,
-              thread_ts: messageTimestamp 
+          } else if (message.includes("disable server")) {
+            Blacklist.disableServer(user, (err) => {
+              if (err) {
+                console.dir(`Error muting server for ${user}`);
+              }
+              bot.chat.postEphemeral({
+                token: botToken,
+                channel,
+                text: 'Successfully muted the server for your user. Type \`@Notify enable server\` to undo',
+                user: user,
+              });
             });
+            return;
+          } else if (message.includes("enable server")) {
+            Blacklist.enableServer(user, (err) => {
+              if (err) {
+                console.dir(`Error unmuting server for ${user}`);
+              }
+              bot.chat.postEphemeral({
+                token: botToken,
+                channel,
+                text: 'Successfully unmuted the server for your user. Type \`@Notify disable server\` to undo',
+                user: user,
+              });
+            });
+            return;
+          } else if (message.includes("disable channel")) {            
+            Blacklist.disableChannel(user, channel, (err) => {
+              if (err) {
+                console.dir(`Error muting ${channel} for ${user}`);
+              }
+              bot.chat.postEphemeral({
+                token: botToken,
+                channel,
+                text: `Successfully muted <!${channel}> for your user. Type \`@Notify enable channel\` to undo`,
+                user: user,
+              });
+            });
+            return;
+          } else if (message.includes("enable channel")) {
+            Blacklist.enableChannel(user, channel, (err) => {
+              if (err) {
+                console.dir(`Error unmuting ${channel} for ${user}`);
+              }
+              bot.chat.postEphemeral({
+                token: botToken,
+                channel,
+                text: `Successfully unmuted <!${channel}> for your user. Type \`@Notify disable channel\` to undo`,
+                user: user,
+              });
+            });
+            return;
           }
-        });
-      
-        
+
+        // If channel is not blacklisted
+        if (!blacklist.includes(channel)) {
+            // Get the list of members currently in the channel
+            bot.channels.info({
+              token: botToken,
+              channel
+            }).then(channelInfo => {
+              const channelMembers = channelInfo.channel.members;
+
+              // Create message filled with users
+              let message = "";
+              for (let i = 0; i < channelMembers.length; i++) {
+                if (channelMembers[i] === 'UE7JDB49G')
+                  continue;
+
+                // Check is user is enabled for this channel
+                const enabled = await Blacklist.checkUserEnabled(username, channel);
+
+                if (enabled) {
+                  message = `${message} <@${channelMembers[i]}>`;
+                }
+              }
+
+              // Respond to thread or create new thread
+              if (threaded) {
+                bot.chat.postMessage({
+                  token: botToken,
+                  channel,
+                  text: message,
+                  thread_ts: threadTimestamp
+                });
+              } else {
+                bot.chat.postMessage({
+                  token: botToken,
+                  channel,
+                  text: message,
+                  thread_ts: messageTimestamp 
+                });
+              }
+            });
+        }
       }
       break;
     case 'message':
