@@ -130,39 +130,69 @@ app.post('*', (request, response) => {
 
               // Create message filled with users
               let message = "";
+              let j = 0;
               for (let i = 0; i < channelMembers.length; i++) {
-                if (channelMembers[i] === 'UE7JDB49G')
+                if (channelMembers[i] === 'UE7JDB49G') {
+                  j++;
+                  if (j >= channelMembers.length) {
+                    // Don't send empty message
+                    if (message === "") {
+                      return;
+                    }
+
+                    // Respond to thread or create new thread
+                    if (threaded) {
+                      bot.chat.postMessage({
+                        token: botToken,
+                        channel,
+                        text: message,
+                        thread_ts: threadTimestamp
+                      });
+                    } else {
+                      bot.chat.postMessage({
+                        token: botToken,
+                        channel,
+                        text: message,
+                        thread_ts: messageTimestamp 
+                      });
+                    }
+                  }
                   continue;
+                }
 
                 // Check is user is enabled for this channel
-                const enabled = Blacklist.checkUserEnabled(user, channel);
+                Blacklist.checkUserEnabled(user, channel, (enabled) => {
+                  if (enabled) {
+                    message = `${message} <@${channelMembers[i]}>`;
+                  }
+                  j++;
+                  if (j >= channelMembers.length) {
+                    // Don't send empty message
+                    if (message === "") {
+                      return;
+                    }
 
-                if (enabled) {
-                  message = `${message} <@${channelMembers[i]}>`;
-                }
-              }
-
-              // Don't send empty message
-              if (message === "") {
-                return;
-              }
-
-              // Respond to thread or create new thread
-              if (threaded) {
-                bot.chat.postMessage({
-                  token: botToken,
-                  channel,
-                  text: message,
-                  thread_ts: threadTimestamp
+                    // Respond to thread or create new thread
+                    if (threaded) {
+                      bot.chat.postMessage({
+                        token: botToken,
+                        channel,
+                        text: message,
+                        thread_ts: threadTimestamp
+                      });
+                    } else {
+                      bot.chat.postMessage({
+                        token: botToken,
+                        channel,
+                        text: message,
+                        thread_ts: messageTimestamp 
+                      });
+                    }
+                  }
                 });
-              } else {
-                bot.chat.postMessage({
-                  token: botToken,
-                  channel,
-                  text: message,
-                  thread_ts: messageTimestamp 
-                });
               }
+
+              
             });
         }
       }

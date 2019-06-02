@@ -22,35 +22,31 @@ const BlacklistSchema = new mongoose.Schema({
   },
 });
 
-BlacklistSchema.statics.checkUserEnabled = (username, channel) => {
+BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
     BlacklistModel.findOne({ username }, (error, user) => {
       if (error) {
         console.dir("Error: Could not search username");
-        return;
+        callback(false);
       }
 
     // User hasn't added any blacklists
     if (!user) {
-      console.dir("1");
-      return true;
+      callback(true);
     }
 
     // User muted the server
     if (user.serverDisabled) {
-      console.dir("2");
-      return false;
+      callback(false);
     }
 
     // Check disabled channels map for current channel
     const { disabledChannels } = user;
     if (disabledChannels[channel]) {
-      console.dir("3");
-      return false;
+      callback(false);
     }
 
     // Current channel isn't blacklisted for the user
-    console.dir("4");
-    return true;
+    callback(true);
   });
 };
 
