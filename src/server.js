@@ -130,36 +130,32 @@ app.post('*', (request, response) => {
 
               // Create message filled with users
               let message = "";
+              let promises = [];
 
-              for (let i = 0, j = 0; i < channelMembers.length; i++) {
-                j++;
+              for (let i = 0; i < channelMembers.length; i++) {
                 if (channelMembers[i] === 'UE7JDB49G') {
-
-                  // Respond to thread or create new thread
-                  if (threaded) {
-                  sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length, 1);
-                  } else {
-                  sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length, 2);
-                  }
-
                   continue;
                 }
 
-                // Check is user is enabled for this channel
-                Blacklist.checkUserEnabled(channelMembers[i], channel, (enabled) => {
-                  if (enabled) {
-                    message = `${message} <@${channelMembers[i]}>`;
-                  }
-                  
-                  // Respond to thread or create new thread
-                  if (threaded) {
-                    sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length, 3);
-                  } else {
-                    sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length, 4);
-                  }
+                const currPromise = new Promise((resolve, reject) => {
+                  // Check is user is enabled for this channel
+                  Blacklist.checkUserEnabled(channelMembers[i], channel, (enabled) => {
+                    if (enabled) {
+                      message = `${message} <@${channelMembers[i]}>`;
+                    }
+                    resolve();
+                  });
                 });
               }
 
+              Promise.all(promises).then( () => {
+                // Respond to thread or create new thread
+                if (threaded) {
+                  sendMessage(botToken, channel, message, threadTimestamp);
+                } else {
+                  sendMessage(botToken, channel, message, messageTimestamp);
+                }
+              });
               
             });
         }
