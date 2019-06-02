@@ -43,28 +43,25 @@ app.post('*', (request, response) => {
         }).then(channelInfo => {
           const channelMembers = channelInfo.channel.members;
           console.dir(channelMembers);
-          // Post the original message
-          /*
-          bot.chat.postMessage({ 
-            token: botToken, 
-            channel, 
-            text: `<@${user}>: ${message}` 
-          });
-*/
+
+          const message = "";
+          for (let i = 0; i < channelMembers.length; i++) {
+            message = `${message} <@${channelMembers[i]}>`;
+          }
 
           if (threaded) {
             bot.chat.postMessage({
               token: botToken,
               channel,
-              text: 'Called in thread',
+              text: message,
               thread_ts: threadTimestamp
             });
           } else {
             bot.chat.postMessage({
               token: botToken,
               channel,
-              text: 'Called out of thread',
-              event_ts: messageTimestamp 
+              text: message,
+              thread_ts: messageTimestamp 
             });
           }
         });
