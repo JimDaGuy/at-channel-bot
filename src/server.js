@@ -186,7 +186,7 @@ app.post('*', (request, response) => {
 const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations) => {
   if (currentIteration >= totalIterations) {
     // Don't send empty message
-    if (message === "") {
+    if (text === "") {
       return;
     }
 
