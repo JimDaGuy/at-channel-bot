@@ -30,8 +30,11 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
         return;
       }
 
+      console.dir(user);
+
     // User hasn't added any blacklists
     if (!user) {
+      console.dir("1");
       callback(true);
       return;
     }
@@ -39,10 +42,12 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
     if (user.hasOwnProperty('serverDisabled')) {
       // User muted the server
       if (user.serverDisabled) {
+        console.dir("2");
         callback(false);
         return;
       }
     } else {
+      console.dir("3");
       callback(true);
       return;
     }
@@ -50,11 +55,13 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
     // Check disabled channels map for current channel
     const { disabledChannels } = user;
     if (disabledChannels[channel]) {
+      console.dir("4");
       callback(false);
       return;
     }
 
     // Current channel isn't blacklisted for the user
+      console.dir("5");
     callback(true);
     return;
   });
