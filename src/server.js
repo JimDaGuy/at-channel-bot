@@ -134,7 +134,7 @@ app.post('*', (request, response) => {
                   continue;
 
                 // Check is user is enabled for this channel
-                const enabled = await Blacklist.checkUserEnabled(username, channel);
+                const enabled = Blacklist.checkUserEnabled(username, channel);
 
                 if (enabled) {
                   message = `${message} <@${channelMembers[i]}>`;
