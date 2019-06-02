@@ -142,13 +142,7 @@ app.post('*', (request, response) => {
 
                     // Respond to thread or create new thread
                     if (threaded) {
-                      bot.chat.postMessage({
-                        token: botToken,
-                        channel,
-                        text: message,
-                        thread_ts: threadTimestamp
-                      });
-                      return;
+                      
                     } else {
                       bot.chat.postMessage({
                         token: botToken,
@@ -156,7 +150,6 @@ app.post('*', (request, response) => {
                         text: message,
                         thread_ts: messageTimestamp 
                       });
-                      return;
                     }
                   }
                   continue;
@@ -167,32 +160,13 @@ app.post('*', (request, response) => {
                   if (enabled) {
                     message = `${message} <@${channelMembers[i]}>`;
                   }
-
+                  
                   j++;
-                  if (j >= channelMembers.length) {
-                    // Don't send empty message
-                    if (message === "") {
-                      return;
-                    }
-
-                    // Respond to thread or create new thread
-                    if (threaded) {
-                      bot.chat.postMessage({
-                        token: botToken,
-                        channel,
-                        text: message,
-                        thread_ts: threadTimestamp
-                      });
-                      return;
-                    } else {
-                      bot.chat.postMessage({
-                        token: botToken,
-                        channel,
-                        text: message,
-                        thread_ts: messageTimestamp 
-                      });
-                      return;
-                    }
+                  // Respond to thread or create new thread
+                  if (threaded) {
+                    sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
+                  } else {
+                    sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
                   }
                 });
               }
@@ -208,6 +182,22 @@ app.post('*', (request, response) => {
       break;
   }
 });
+
+const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations) => {
+  if (currentIteration >= totalIterations) {
+    // Don't send empty message
+    if (message === "") {
+      return;
+    }
+
+    bot.chat.postMessage({
+      token,
+      channel,
+      text,
+      thread_ts: timestamp
+    });
+  }
+};
 
 app.listen(port, (err) => {
   if (err) {
