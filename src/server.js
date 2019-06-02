@@ -147,7 +147,7 @@ app.post('*', (request, response) => {
                   });
                 });
 
-                promises.append(currPromise);
+                promises.push(currPromise);
               }
 
               Promise.all(promises).then( () => {
