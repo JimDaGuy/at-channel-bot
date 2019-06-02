@@ -30,6 +30,7 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
         return;
       }
 
+      console.dir(username);
       console.dir(user);
 
     // User hasn't added any blacklists
