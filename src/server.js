@@ -136,9 +136,9 @@ app.post('*', (request, response) => {
                 if (channelMembers[i] === 'UE7JDB49G') {
                   // Respond to thread or create new thread
                   if (threaded) {
-                  sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
+                  sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length, 1);
                   } else {
-                  sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
+                  sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length, 2);
                   }
                   j++;
 
@@ -153,9 +153,9 @@ app.post('*', (request, response) => {
                   
                   // Respond to thread or create new thread
                   if (threaded) {
-                    sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length);
+                    sendMessage(botToken, channel, message, threadTimestamp, j, channelMembers.length, 3);
                   } else {
-                    sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length);
+                    sendMessage(botToken, channel, message, messageTimestamp, j, channelMembers.length, 4);
                   }
                   j++;
 
@@ -174,7 +174,8 @@ app.post('*', (request, response) => {
   }
 });
 
-const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations) => {
+const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations, spot) => {
+  console.dir("spot:" + spot);
   console.dir("curr: " + currentIteration);
   console.dir("total: " + totalIterations);
   if (currentIteration >= totalIterations) {
