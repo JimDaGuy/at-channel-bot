@@ -44,7 +44,7 @@ app.post('*', (request, response) => {
           const channelMembers = channelInfo.channel.members;
           console.dir(channelMembers);
 
-          const message = "";
+          let message = "";
           for (let i = 0; i < channelMembers.length; i++) {
             message = `${message} <@${channelMembers[i]}>`;
           }
