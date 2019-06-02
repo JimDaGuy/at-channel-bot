@@ -99,7 +99,7 @@ app.post('*', (request, response) => {
               bot.chat.postEphemeral({
                 token: botToken,
                 channel,
-                text: `Successfully muted <!${channel}> for your user. Type \`@Notify enable channel\` to undo`,
+                text: `Successfully muted <#${channel}> for your user. Type \`@Notify enable channel\` to undo`,
                 user: user,
               });
             });
@@ -112,7 +112,7 @@ app.post('*', (request, response) => {
               bot.chat.postEphemeral({
                 token: botToken,
                 channel,
-                text: `Successfully unmuted <!${channel}> for your user. Type \`@Notify disable channel\` to undo`,
+                text: `Successfully unmuted <#${channel}> for your user. Type \`@Notify disable channel\` to undo`,
                 user: user,
               });
             });
