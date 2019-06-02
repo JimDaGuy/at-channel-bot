@@ -36,7 +36,7 @@ app.post('*', (request, response) => {
         bot.chat.postMessage({ 
           token: botToken, 
           channel, 
-          text: `<!channel> | <@${user}>: ${message}` });
+          text: `<@${user}>: ${message}` });
       break;
     case 'message':
     default:
