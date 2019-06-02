@@ -17,11 +17,8 @@ mongoose.connect(dbURL, (err) => {
   }
 });
 
-const models = require('./index.js');
+const models = require('./Models/index.js');
 const Blacklist = models.Blacklist.BlacklistModel;
-
-Blacklist.disableServer('Hiya', () => {});
-Blacklist.disableChannel('Hiya', 'Channel 2', () => {});
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
