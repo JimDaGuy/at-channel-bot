@@ -176,6 +176,7 @@ app.post('*', (request, response) => {
 
 const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations, spot) => {
   console.dir("spot:" + spot);
+  console.dir("channel:" + channel);
   console.dir("curr: " + currentIteration);
   console.dir("total: " + totalIterations);
   if (currentIteration >= totalIterations) {
