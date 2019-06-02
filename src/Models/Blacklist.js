@@ -31,7 +31,6 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
       }
 
       console.dir(username);
-      console.dir(userdoc);
 
     // User hasn't added any blacklists
     if (!user) {
@@ -41,6 +40,7 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
     }
 
     const userdoc = user._doc;
+    console.dir(userdoc);
 
     if (userdoc.hasOwnProperty('serverDisabled')) {
       // User muted the server
