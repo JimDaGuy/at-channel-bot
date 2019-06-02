@@ -28,11 +28,13 @@ app.post('*', (request, response) => {
   const channel = params.event.channel;
   const botMessage = params.event.subtype === 'bot_message';
 
-  const channelInfo = bot.channels.info({
+  bot.channels.info({
     token: botToken,
     channel
+  }).then(channelInfo => {
+    console.dir("Members!")
+    console.dir(channelInfo.members)
   });
-  console.dir(channelInfo);
 
   switch (eventType) {
     case 'app_mention':
