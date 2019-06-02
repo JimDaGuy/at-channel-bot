@@ -46,6 +46,10 @@ app.post('*', (request, response) => {
       res.status(200).send();
       // If not blacklisted and not sent from a bot
       if (!botMessage) {
+          if (!username || !channel) {
+            return;
+          }
+          
           // Check if the message is requesting something other than an at channel
           if (message.includes("help")) {
             bot.chat.postEphemeral({
