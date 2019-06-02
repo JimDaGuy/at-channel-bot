@@ -27,26 +27,36 @@ BlacklistSchema.statics.checkUserEnabled = (username, channel, callback) => {
       if (error) {
         console.dir("Error: Could not search username");
         callback(false);
+        return;
       }
 
     // User hasn't added any blacklists
     if (!user) {
       callback(true);
+      return;
     }
 
-    // User muted the server
-    if (user.serverDisabled) {
-      callback(false);
+    if (Object.hasOwnProperty('serverDisabled')) {
+      // User muted the server
+      if (user.serverDisabled) {
+        callback(false);
+        return;
+      }
+    } else {
+      callback(true);
+      return;
     }
 
     // Check disabled channels map for current channel
     const { disabledChannels } = user;
     if (disabledChannels[channel]) {
       callback(false);
+      return;
     }
 
     // Current channel isn't blacklisted for the user
     callback(true);
+    return;
   });
 };
 
