@@ -28,6 +28,12 @@ app.post('*', (request, response) => {
   const channel = params.event.channel;
   const botMessage = params.event.subtype === 'bot_message';
 
+  const channelInfo = bot.channels.info({
+    token: botToken,
+    channel
+  });
+  console.dir(channelInfo);
+
   switch (eventType) {
     case 'app_mention':
       res.status(200).send();
