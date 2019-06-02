@@ -46,10 +46,10 @@ app.post('*', (request, response) => {
       res.status(200).send();
       // If not blacklisted and not sent from a bot
       if (!botMessage) {
-          if (!username || !channel) {
+          if (!user || !channel) {
             return;
           }
-          
+
           // Check if the message is requesting something other than an at channel
           if (message.includes("help")) {
             bot.chat.postEphemeral({
@@ -135,7 +135,7 @@ app.post('*', (request, response) => {
                   continue;
 
                 // Check is user is enabled for this channel
-                const enabled = Blacklist.checkUserEnabled(username, channel);
+                const enabled = Blacklist.checkUserEnabled(user, channel);
 
                 if (enabled) {
                   message = `${message} <@${channelMembers[i]}>`;
