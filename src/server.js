@@ -27,24 +27,50 @@ app.post('*', (request, response) => {
   const user = params.event.user;
   const channel = params.event.channel;
   const botMessage = params.event.subtype === 'bot_message';
-
-  bot.channels.info({
-    token: botToken,
-    channel
-  }).then(channelInfo => {
-    console.dir("Members!")
-    console.dir(channelInfo)
-  });
+  const messageTimestamp = params.event.event_ts;
+  const threadTimestamp = params.event.thread_ts || null;
+  const threaded = threadTimestamp !== null; 
 
   switch (eventType) {
     case 'app_mention':
       res.status(200).send();
-      // If not blacklisted and not responding to a bot, send @channel
-      if ((!blacklist.includes(channel)) && !(botMessage))
-        bot.chat.postMessage({ 
-          token: botToken, 
-          channel, 
-          text: `<@${user}>: ${message}` });
+      // If not blacklisted and not sent from a bot
+      if ((!blacklist.includes(channel)) && !(botMessage)) {
+        // Get the list of members currently in the channel
+        bot.channels.info({
+          token: botToken,
+          channel
+        }).then(channelInfo => {
+          const channelMembers = channelInfo.channel.members;
+          console.dir(channelMembers);
+          // Post the original message
+          /*
+          bot.chat.postMessage({ 
+            token: botToken, 
+            channel, 
+            text: `<@${user}>: ${message}` 
+          });
+*/
+
+          if (threaded) {
+            bot.chat.postMessage({
+              token: botToken,
+              channel,
+              text: 'Called in thread',
+              thread_ts: threadTimestamp
+            });
+          } else {
+            bot.chat.postMessage({
+              token: botToken,
+              channel,
+              text: 'Called out of thread',
+              event_ts: messageTimestamp 
+            });
+          }
+        });
+      
+        
+      }
       break;
     case 'message':
     default:
