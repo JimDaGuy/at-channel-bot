@@ -146,7 +146,7 @@ app.post('*', (request, response) => {
                 }
 
                 // Check is user is enabled for this channel
-                Blacklist.checkUserEnabled(user, channel, (enabled) => {
+                Blacklist.checkUserEnabled(channelMembers[i], channel, (enabled) => {
                   if (enabled) {
                     message = `${message} <@${channelMembers[i]}>`;
                   }
@@ -176,7 +176,6 @@ app.post('*', (request, response) => {
 
 const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations, spot) => {
   console.dir("spot:" + spot);
-  console.dir("channel:" + channel);
   console.dir("curr: " + currentIteration);
   console.dir("total: " + totalIterations);
   if (currentIteration >= totalIterations) {
