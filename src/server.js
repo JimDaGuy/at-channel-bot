@@ -33,7 +33,7 @@ app.post('*', (request, response) => {
     channel
   }).then(channelInfo => {
     console.dir("Members!")
-    console.dir(channelInfo.members)
+    console.dir(channelInfo)
   });
 
   switch (eventType) {
