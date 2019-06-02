@@ -146,6 +146,8 @@ app.post('*', (request, response) => {
                     resolve();
                   });
                 });
+
+                promises.append(currPromise);
               }
 
               Promise.all(promises).then( () => {
