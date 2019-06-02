@@ -175,6 +175,8 @@ app.post('*', (request, response) => {
 });
 
 const sendMessage = (token, channel, text, timestamp, currentIteration, totalIterations) => {
+  console.dir("curr: " + currentIteration);
+  console.dir("total: " + totalIterations);
   if (currentIteration >= totalIterations) {
     // Don't send empty message
     if (text === "") {
