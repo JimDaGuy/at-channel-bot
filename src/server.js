@@ -40,10 +40,15 @@ app.post('*', (request, response) => {
   const messageTimestamp = params.event.event_ts;
   const threadTimestamp = params.event.thread_ts || null;
   const threaded = threadTimestamp !== null; 
+  const edited = params.event.edited !== undefined && params.event.edited !== null;
+
+  res.status(200).send();
+  if (edited) {
+    return;
+  }
 
   switch (eventType) {
     case 'app_mention':
-      res.status(200).send();
       // If not blacklisted and not sent from a bot
       if (!botMessage) {
           if (!user || !channel) {
@@ -167,9 +172,7 @@ app.post('*', (request, response) => {
         }
       }
       break;
-    case 'message':
     default:
-      res.status(200).send();
       break;
   }
 });
