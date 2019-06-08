@@ -55,13 +55,14 @@ app.post('*', (request, response) => {
             bot.chat.postEphemeral({
               token: botToken,
               channel,
-              text: `Here\s my commands! \n
-                     =================== \n
-                     Help: \`@Notify help\` \n
-                     Enable Server: \`@Notify enable server\` \n
-                     Disable Server: \`@Notify disable server\` \n
-                     Enable Channel: \`@Notify enable channel\` \n
-                     Disable Channel: \`@Notify disable channel\` \n
+              text: `\n
+                    Here\s my commands! \n
+                    =================== \n
+                    Help: \`@Notify help\` \n
+                    Enable Server: \`@Notify enable server\` \n
+                    Disable Server: \`@Notify disable server\` \n
+                    Enable Channel: \`@Notify enable channel\` \n
+                    Disable Channel: \`@Notify disable channel\` \n
                      `,
               user: user,
             });
@@ -130,11 +131,13 @@ app.post('*', (request, response) => {
               const channelMembers = channelInfo.channel.members;
 
               // Create message filled with users
-              let message = "";
+              let newMessage = "";
               let promises = [];
 
               for (let i = 0; i < channelMembers.length; i++) {
                 if (channelMembers[i] === 'UE7JDB49G') {
+                  continue;
+                } else if (channelMembers[i] === user) {
                   continue;
                 }
 
@@ -142,7 +145,7 @@ app.post('*', (request, response) => {
                   // Check is user is enabled for this channel
                   Blacklist.checkUserEnabled(channelMembers[i], channel, (enabled) => {
                     if (enabled) {
-                      message = `${message} <@${channelMembers[i]}>`;
+                      newMessage = `${newMessage} <@${channelMembers[i]}>`;
                     }
                     resolve();
                   });
@@ -154,9 +157,9 @@ app.post('*', (request, response) => {
               Promise.all(promises).then( () => {
                 // Respond to thread or create new thread
                 if (threaded) {
-                  sendMessage(botToken, channel, message, threadTimestamp);
+                  sendMessage(botToken, channel, newMessage, threadTimestamp, user, message);
                 } else {
-                  sendMessage(botToken, channel, message, messageTimestamp);
+                  sendMessage(botToken, channel, newMessage, messageTimestamp, user, message);
                 }
               });
               
@@ -171,16 +174,20 @@ app.post('*', (request, response) => {
   }
 });
 
-const sendMessage = (token, channel, text, timestamp) => {
+const sendMessage = (token, channel, memberString, timestamp, user, originalMessage) => {
   // Don't send empty message
-  if (text === "") {
+  if (memberString === "") {
     return;
   }
+
+  const trimmedMessage = originalMessage.replace("<@UE7JDB49G>", "").trim();
+  
+  const outputText = `<@${user}>: ${trimmedMessage} | ${memberString}`;
 
   bot.chat.postMessage({
     token,
     channel,
-    text,
+    text: outputText,
     thread_ts: timestamp
   });
 };
